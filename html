@@ -1,0 +1,390 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>مجالات الإدارة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap">
+<style>
+/* Layout: sticky top bar with section pills, one full view at a time, hash-routed with directional slide transitions, prev/next at the foot. */
+:root {
+  --bg: #f8f9fc;
+  --surface: #ffffff;
+  --surface-2: #f1f4fa;
+  --fg: #1c2540;
+  --muted: #5a6482;
+  --line: #dfe4f0;
+  --navy: #1e3a8a;
+  --navy-ink: #ffffff;
+  --amber: #d97706;
+  --amber-soft: #fdf1dc;
+  --good: #0b7a55;
+  --font-display: "Readex Pro", "Segoe UI", Tahoma, sans-serif;
+  --font-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1224; --surface: #151c36; --surface-2: #1b2444; --fg: #e8ecf8; --muted: #9aa5c6;
+    --line: #29335a; --navy: #8fb0ff; --navy-ink: #0d1224; --amber: #f5a623; --amber-soft: #2c2412; --good: #4ad1a0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1224; --surface: #151c36; --surface-2: #1b2444; --fg: #e8ecf8; --muted: #9aa5c6;
+  --line: #29335a; --navy: #8fb0ff; --navy-ink: #0d1224; --amber: #f5a623; --amber-soft: #2c2412; --good: #4ad1a0;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 400 1.0625rem/1.9 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  min-height: 100%;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--surface); }
+h1, h2, h3 { font-family: var(--font-display); margin: 0; text-wrap: balance; line-height: 1.35; }
+a { color: inherit; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; border-radius: 6px; }
+
+.progress { position: fixed; inset: 0 0 auto 0; height: 4px; z-index: 40; background: linear-gradient(90deg, #f59e0b, #3b82f6 55%, #1e3a8a); transform-origin: right; transform: scaleX(0); transition: transform .5s cubic-bezier(.2,.7,.2,1); }
+
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line);
+  margin-inline: calc(max(16px, env(safe-area-inset-left, 0px)) * -1) calc(max(16px, env(safe-area-inset-right, 0px)) * -1);
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
+.bar-in { max-width: 62rem; margin: 0 auto; display: flex; align-items: center; gap: 1rem; padding-block: .6rem; }
+.brand { font: 600 1rem var(--font-display); color: var(--navy); white-space: nowrap; text-decoration: none; background: none; border: 0; padding: 0; }
+.pills { display: flex; gap: .35rem; overflow-x: auto; flex: 1; min-width: 0; scrollbar-width: none; padding-block: 2px; }
+.pills::-webkit-scrollbar { display: none; }
+.pill { white-space: nowrap; border: 1px solid transparent; background: none; border-radius: 999px; padding: .15rem .8rem; font-size: .9rem; color: var(--muted); text-decoration: none; transition: background .2s, color .2s; }
+.pill:hover { background: var(--surface-2); color: var(--fg); }
+.pill[aria-current="page"] { background: var(--navy); color: var(--navy-ink); font-weight: 600; }
+.theme { border: 1px solid var(--line); background: var(--surface-2); border-radius: 999px; width: 2.2rem; height: 2.2rem; display: grid; place-items: center; flex: none; }
+.theme svg { width: 1.1rem; height: 1.1rem; stroke: var(--fg); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+main { max-width: 62rem; margin: 0 auto; padding-block: 2.5rem 1.5rem; min-height: 70vh; }
+.view { display: none; }
+.view.active { display: block; }
+.view.in-fwd { animation: fwd .55s cubic-bezier(.2,.7,.2,1) both; }
+.view.in-back { animation: back .55s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes fwd { from { opacity: 0; transform: translateX(-36px); } to { opacity: 1; transform: none; } }
+@keyframes back { from { opacity: 0; transform: translateX(36px); } to { opacity: 1; transform: none; } }
+.view.active .rise { animation: rise .6s cubic-bezier(.2,.7,.2,1) both; }
+.view.active .rise:nth-child(2) { animation-delay: .07s; }
+.view.active .rise:nth-child(3) { animation-delay: .14s; }
+.view.active .rise:nth-child(4) { animation-delay: .21s; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* home */
+.hero { display: grid; gap: 1.2rem; padding-block: 2rem 2.5rem; }
+.hero h1 { font-size: clamp(2.6rem, 8vw, 4.6rem); color: var(--navy); font-weight: 700; letter-spacing: -.01em; }
+.hero .sub { font: 500 clamp(1.1rem, 3vw, 1.5rem) var(--font-display); color: var(--amber); }
+.meta { margin: 1rem 0 0; padding: .3rem 1.2rem .3rem 0; border-inline-start: 4px solid var(--navy); display: grid; gap: .1rem; color: var(--muted); }
+.meta b { color: var(--fg); font-weight: 600; }
+.cta { justify-self: start; margin-top: 1rem; background: var(--navy); color: var(--navy-ink); border: 0; border-radius: .7rem; padding: .7rem 1.6rem; font: 600 1.05rem var(--font-display); transition: transform .2s; }
+.cta:hover { transform: translateX(-4px); }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; margin-top: 1rem; }
+.field { text-align: start; background: var(--surface); border: 1px solid var(--line); border-radius: .9rem; padding: 1.1rem 1.2rem; display: grid; gap: .35rem; transition: transform .25s, border-color .25s; text-decoration: none; min-width: 0; }
+.field:hover { transform: translateY(-4px); border-color: var(--navy); }
+.field .n { font: 700 1.9rem var(--font-display); color: var(--amber); line-height: 1; }
+.field h3 { font-size: 1.1rem; color: var(--navy); }
+.field p { margin: 0; font-size: .92rem; line-height: 1.7; color: var(--muted); }
+
+/* sector pages */
+.kicker { font: 600 .95rem var(--font-display); color: var(--amber); letter-spacing: .02em; margin-bottom: .5rem; }
+.head { display: flex; align-items: flex-start; gap: 1.2rem; }
+.big { font: 700 clamp(3.5rem, 12vw, 6.5rem) var(--font-display); line-height: .9; color: var(--navy); opacity: .16; flex: none; }
+.head h2 { font-size: clamp(1.8rem, 5vw, 2.9rem); color: var(--navy); }
+.lede { font-size: clamp(1.1rem, 2.4vw, 1.3rem); line-height: 2; max-width: 46rem; margin: 1.6rem 0 2rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1rem; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: .9rem; padding: 1.3rem 1.4rem; min-width: 0; }
+.card h3 { font-size: 1.1rem; color: var(--navy); margin-bottom: .5rem; }
+.card p { margin: 0; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.6rem; }
+.chip { background: var(--amber-soft); color: var(--fg); border-radius: 999px; padding: .2rem .9rem; font-size: .92rem; }
+.chip b { color: var(--amber); font-weight: 600; }
+
+/* process */
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem; counter-reset: s; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: .9rem; padding: 1.2rem 1.3rem; min-width: 0; transition: transform .25s, border-color .25s; }
+.step:hover { transform: translateY(-4px); border-color: var(--amber); }
+.step .sn { display: inline-grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--navy); color: var(--navy-ink); font: 600 1rem var(--font-display); margin-bottom: .7rem; }
+.step h3 { font-size: 1.15rem; color: var(--navy); margin-bottom: .3rem; }
+.step p { margin: 0; color: var(--muted); font-size: .98rem; line-height: 1.8; }
+.loop { margin-top: 1rem; color: var(--muted); font-size: .95rem; }
+
+/* table */
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: .9rem; background: var(--surface); margin-top: 1.5rem; }
+table { border-collapse: collapse; width: 100%; min-width: 38rem; }
+th { background: var(--navy); color: var(--navy-ink); font: 600 .98rem var(--font-display); text-align: start; padding: .9rem 1.1rem; }
+td { padding: 1rem 1.1rem; border-top: 1px solid var(--line); line-height: 1.7; vertical-align: top; }
+td:first-child { font-weight: 600; color: var(--navy); }
+tbody tr:nth-child(even) { background: var(--surface-2); }
+tbody tr { transition: background .2s; }
+tbody tr:hover { background: var(--amber-soft); }
+
+/* quiz */
+.qs { display: grid; gap: 1rem; margin-top: 1.5rem; }
+.q { background: var(--surface); border: 1px solid var(--line); border-inline-start: 5px solid var(--amber); border-radius: .9rem; padding: 1.2rem 1.4rem; }
+.q h3 { font-size: 1.1rem; color: var(--navy); line-height: 1.8; }
+.reveal { margin-top: .8rem; background: var(--surface-2); border: 1px solid var(--line); border-radius: .6rem; padding: .35rem 1rem; font-size: .95rem; }
+.ans { display: none; margin: .8rem 0 0; color: var(--good); font-weight: 600; line-height: 1.8; }
+.q.open .ans { display: block; animation: rise .4s both; }
+.q.open .reveal { display: none; }
+
+/* pager */
+.pager { max-width: 62rem; margin: 0 auto; display: flex; justify-content: space-between; gap: 1rem; padding-block: 1.5rem 2rem; border-top: 1px solid var(--line); }
+.pbtn { display: flex; align-items: center; gap: .6rem; background: var(--surface); border: 1px solid var(--line); border-radius: .7rem; padding: .6rem 1.1rem; font-weight: 500; transition: border-color .2s, transform .2s; min-width: 0; }
+.pbtn:hover:not([disabled]) { border-color: var(--navy); }
+.pbtn[disabled] { opacity: .35; cursor: default; }
+.pbtn small { display: block; color: var(--muted); font-size: .78rem; line-height: 1.2; }
+.pbtn span.t { line-height: 1.4; }
+.pbtn.next { background: var(--navy); color: var(--navy-ink); border-color: var(--navy); }
+.pbtn.next small { color: inherit; opacity: .8; }
+.pbtn svg { width: 1.2rem; height: 1.2rem; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.foot { text-align: center; color: var(--muted); font-size: .85rem; padding-bottom: 2rem; }
+
+@media (max-width: 560px) {
+  .head { flex-direction: column; gap: .2rem; }
+  .brand { display: none; }
+  .pbtn .t small + * { font-size: .9rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .view.in-fwd, .view.in-back, .view.active .rise, .q.open .ans { animation: none; }
+  .progress { transition: none; }
+  html { scroll-behavior: auto; }
+}
+</style>
+
+<div class="progress" id="progress"></div>
+
+<header class="bar">
+  <div class="bar-in">
+    <a class="brand" href="#home">مجالات الإدارة</a>
+    <nav class="pills" id="pills" aria-label="أقسام العرض"></nav>
+    <button class="theme" id="theme" type="button" aria-label="تبديل الوضع الداكن">
+      <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="view" id="home" data-title="الرئيسية">
+    <div class="hero">
+      <h1 class="rise">مجالات الإدارة</h1>
+      <div class="sub rise">رحلة استكشافية في عالم القيادة والتنظيم</div>
+      <div class="meta rise">
+        <div><b>المادة:</b> المهارات الإدارية</div>
+        <div><b>الصف:</b> الثالث الثانوي (نظام المسارات)</div>
+        <div><b>عرض تقديمي من إعداد:</b> مجموعة العمل الطلابية</div>
+      </div>
+      <button class="cta rise" type="button" data-go="next">ابدأ الرحلة ←</button>
+    </div>
+    <div class="fields" id="fields"></div>
+  </section>
+
+  <section class="view" id="general" data-title="الإدارة العامة">
+    <div class="kicker rise">تقديم الطالب الأول · قطاع الدولة الحكومي</div>
+    <div class="head rise"><span class="big" aria-hidden="true">1</span><h2>الإدارة العامة</h2></div>
+    <p class="lede rise">تُمثل الإدارة العامة جهاز الدولة التنفيذي المسؤول عن تحويل القوانين والسياسات العليا إلى خدمات واقعية ملموسة تُقدم للمواطنين والمجتمع بكفاءة وعدالة.</p>
+    <div class="cards rise">
+      <div class="card"><h3>الهدف والغاية الأساسية</h3><p>التركيز المطلق على تقديم المصلحة العامة والخدمات المدنية للمجتمع، دون السعي وراء تحقيق أي أرباح مالية.</p></div>
+      <div class="card"><h3>آلية ومصادر التمويل</h3><p>تعتمد كلياً على ميزانية الدولة العامة المستمدة من الإيرادات الحكومية السيادية والضرائب والرسوم المعتمدة.</p></div>
+    </div>
+    <div class="chips rise"><span class="chip"><b>الجهة المستفيدة:</b> كافة المواطنين والمقيمين</span></div>
+  </section>
+
+  <section class="view" id="business" data-title="إدارة الأعمال">
+    <div class="kicker rise">تقديم الطالب الثاني · القطاع التجاري الخاص</div>
+    <div class="head rise"><span class="big" aria-hidden="true">2</span><h2>إدارة الأعمال</h2></div>
+    <p class="lede rise">تختص بإدارة المشروعات والشركات والمؤسسات التجارية المملوكة للأفراد أو المجموعات الاستثمارية، وتعمل في بيئة تنافسية مفتوحة تحكمها حركية السوق.</p>
+    <div class="cards rise">
+      <div class="card"><h3>الهدف والغاية الأساسية</h3><p>الهدف الجوهري هو تعظيم الأرباح المالية، وضمان النمو والانتشار، وتعزيز المكانة التنافسية للشركة في قطاعها.</p></div>
+      <div class="card"><h3>آلية ومصادر التمويل</h3><p>تعتمد بالكامل على رؤوس الأموال الخاصة بالشركاء، والقروض البنكية، والاستثمارات، والأرباح التشغيلية المعاد تدويرها.</p></div>
+    </div>
+    <div class="chips rise"><span class="chip"><b>الجهة المستفيدة:</b> المستثمرون والعملاء المستهدفون</span></div>
+  </section>
+
+  <section class="view" id="international" data-title="الهيئات الدولية">
+    <div class="kicker rise">تقديم الطالب الثالث · القطاع الدولي والإقليمي</div>
+    <div class="head rise"><span class="big" aria-hidden="true">3</span><h2>إدارة الهيئات والمنظمات الدولية</h2></div>
+    <p class="lede rise">هو المجال المعني بقيادة وتوجيه المؤسسات التي تتجاوز حدودها دولة واحدة، لتنسيق الجهود العالمية وحل المشكلات والقضايا المشتركة بين الدول.</p>
+    <div class="cards rise">
+      <div class="card"><h3>نطاق التأثير والأهداف</h3><p>حفظ الأمن والسلام الدوليين، تقديم الإغاثات الإنسانية، رعاية قطاعات الصحة والتعليم عالمياً، وحل النزاعات الإقليمية.</p></div>
+      <div class="card"><h3>أمثلة ومنظومة العمل</h3><p>تدار بناءً على مواثيق معتمدة مثل: هيئة الأمم المتحدة، وجامعة الدول العربية، ومجلس التعاون لدول الخليج العربية.</p></div>
+    </div>
+  </section>
+
+  <section class="view" id="nonprofit" data-title="المؤسسات غير الربحية">
+    <div class="kicker rise">تقديم الطالب الرابع · القطاع الخيري والتطوعي</div>
+    <div class="head rise"><span class="big" aria-hidden="true">4</span><h2>إدارة المؤسسات غير الربحية</h2></div>
+    <p class="lede rise">تشمل إدارة الجمعيات الأهلية، والمؤسسات الخيرية، والأوقاف المجتمعية التي تنشأ بدافع ديني، إنساني، أو وطني لسد الثغرات التنموية.</p>
+    <div class="cards rise">
+      <div class="card"><h3>الهدف والغاية الأساسية</h3><p>رعاية الفئات المحتاجة، تقديم الدعم الاجتماعي، تمكين العمل التطوعي، وتنمية المجتمع دون استهداف عائد مالي مادي.</p></div>
+      <div class="card"><h3>آلية ومصادر التمويل</h3><p>تتغذى أنشطتها ومشاريعها بالاعتماد على التبرعات، وأموال الزكاة والصدقات، والأوقاف الاستثمارية، والمنح الحكومية التشجيعية.</p></div>
+    </div>
+    <div class="chips rise"><span class="chip"><b>الجهة المستفيدة:</b> الفئات المستهدفة والمحتاجة</span></div>
+  </section>
+
+  <section class="view" id="process" data-title="العملية الإدارية">
+    <div class="kicker rise">صفحة إضافية · القاسم المشترك بين المجالات</div>
+    <div class="head rise"><span class="big" aria-hidden="true">4</span><h2>العملية الإدارية: وظائف لا تتغير</h2></div>
+    <p class="lede rise">سواء أدار الشخص وزارة أو شركة أو جمعية خيرية، فهو يمارس الوظائف الأربع نفسها. الذي يتغير من مجال إلى آخر هو الهدف ومصدر التمويل فقط.</p>
+    <div class="steps rise">
+      <div class="step"><span class="sn">1</span><h3>التخطيط</h3><p>تحديد الأهداف ورسم الطريق للوصول إليها.</p></div>
+      <div class="step"><span class="sn">2</span><h3>التنظيم</h3><p>توزيع المهام والموارد وتحديد الصلاحيات والمسؤوليات.</p></div>
+      <div class="step"><span class="sn">3</span><h3>التوجيه</h3><p>قيادة الأفراد وتحفيزهم وتنسيق جهودهم نحو الهدف.</p></div>
+      <div class="step"><span class="sn">4</span><h3>الرقابة</h3><p>متابعة الأداء ومقارنته بالخطة وتصحيح أي انحراف.</p></div>
+    </div>
+    <p class="loop rise">نتائج الرقابة تعود إلى التخطيط من جديد، فتدور العملية باستمرار.</p>
+  </section>
+
+  <section class="view" id="compare" data-title="المقارنة">
+    <div class="kicker rise">تقديم الطالب الخامس · المقارنة والتحليل البنيوي</div>
+    <div class="head rise"><span class="big" aria-hidden="true">5</span><h2>أوجه التشابه والاختلاف الجوهرية</h2></div>
+    <p class="lede rise">تتطابق جميع هذه المجالات في توظيف "العملية الإدارية"، وتختلف جذرياً في فلسفة وجودها وهياكل تمويلها كما يوضح الجدول:</p>
+    <div class="tablewrap rise">
+      <table>
+        <thead><tr><th>مجال الإدارة</th><th>الهدف الرئيسي للمجال</th><th>مصدر التمويل الأساسي</th><th>الجهة المستفيدة</th></tr></thead>
+        <tbody>
+          <tr><td>الإدارة العامة</td><td>تقديم المصلحة العامة والخدمة</td><td>ميزانية الدولة والضرائب</td><td>كافة المواطنين والمقيمين</td></tr>
+          <tr><td>إدارة الأعمال</td><td>تحقيق وتعظيم الأرباح المالية</td><td>رؤوس الأموال الخاصة والاستثمار</td><td>المستثمرون والعملاء المستهدفون</td></tr>
+          <tr><td>المؤسسات غير الربحية</td><td>تنمية المجتمع والعمل الخيري</td><td>الأوقاف والتبرعات والمنح</td><td>الفئات المستهدفة والمحتاجة</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="view" id="quiz" data-title="الأسئلة">
+    <div class="kicker rise">خاتمة وتفاعل مع الصف</div>
+    <div class="head rise"><h2>أسئلة تقييمية بديهية</h2></div>
+    <div class="qs rise">
+      <div class="q"><h3>السؤال الأول: ما هو الهدف الجوهري الذي يميز إدارة الأعمال عن الإدارة العامة؟</h3>
+        <button class="reveal" type="button">أظهر الإجابة</button>
+        <p class="ans">الإجابة: إدارة الأعمال تهدف أساساً إلى تحقيق الربح المالي والمنافسة، بينما الإدارة العامة تهدف لخدمة المجتمع بلا ربح.</p></div>
+      <div class="q"><h3>السؤال الثاني: على ماذا تعتمد الجمعيات الخيرية والمؤسسات غير الربحية لتغطية مصاريفها؟</h3>
+        <button class="reveal" type="button">أظهر الإجابة</button>
+        <p class="ans">الإجابة: تعتمد بشكل رئيسي على أموال الأوقاف، التبرعات، أموال الزكاة والصدقات، والمنح التشجيعية.</p></div>
+      <div class="q"><h3>السؤال الثالث: هل تختلف وظائف الإدارة (التخطيط والتنظيم والرقابة) عند الانتقال من إدارة شركة إلى إدارة وزارة حكومية؟</h3>
+        <button class="reveal" type="button">أظهر الإجابة</button>
+        <p class="ans">الإجابة: لا تختلف؛ فالوظائف الإدارية الأربعة ثابتة وموحدة وتطبق في جميع المجالات والقطاعات، والاختلاف يكون في الأهداف فقط.</p></div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="pager" aria-label="التنقل بين الشرائح">
+  <button class="pbtn prev" id="prev" type="button">
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    <span class="t"><small>السابق</small><span id="prevT"></span></span>
+  </button>
+  <button class="pbtn next" id="next" type="button">
+    <span class="t"><small>التالي</small><span id="nextT"></span></span>
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+  </button>
+</nav>
+<div class="foot">مجالات الإدارة · المهارات الإدارية · الثالث الثانوي (نظام المسارات)</div>
+
+<script>
+(function () {
+  var ids = ["home", "general", "business", "international", "nonprofit", "process", "compare", "quiz"];
+  var views = {}, titles = {};
+  ids.forEach(function (id) { var el = document.getElementById(id); views[id] = el; titles[id] = el.getAttribute("data-title"); });
+
+  // nav pills
+  var pills = document.getElementById("pills");
+  ids.forEach(function (id) {
+    var a = document.createElement("a");
+    a.className = "pill"; a.href = "#" + id; a.textContent = titles[id]; a.setAttribute("data-id", id);
+    pills.appendChild(a);
+  });
+
+  // home field cards
+  var fields = document.getElementById("fields");
+  var blurbs = {
+    general: "خدمة المجتمع بلا ربح",
+    business: "تعظيم الأرباح والنمو",
+    international: "تنسيق الجهود بين الدول",
+    nonprofit: "العمل الخيري والتطوعي"
+  };
+  ["general", "business", "international", "nonprofit"].forEach(function (id, i) {
+    var a = document.createElement("a");
+    a.className = "field"; a.href = "#" + id;
+    a.innerHTML = '<span class="n">' + (i + 1) + '</span><h3></h3><p></p>';
+    a.querySelector("h3").textContent = titles[id];
+    a.querySelector("p").textContent = blurbs[id];
+    fields.appendChild(a);
+  });
+
+  var current = -1;
+  function idx() {
+    var h = (location.hash || "").replace("#", "");
+    var i = ids.indexOf(h);
+    return i < 0 ? 0 : i;
+  }
+  function show(i, animate) {
+    var dir = current < 0 ? 0 : (i > current ? 1 : -1);
+    ids.forEach(function (id, k) {
+      var v = views[id];
+      v.classList.remove("active", "in-fwd", "in-back");
+      if (k === i) {
+        v.classList.add("active");
+        if (animate && dir !== 0) { void v.offsetWidth; v.classList.add(dir > 0 ? "in-fwd" : "in-back"); }
+      }
+    });
+    current = i;
+    Array.prototype.forEach.call(pills.children, function (p, k) {
+      if (k === i) { p.setAttribute("aria-current", "page"); p.scrollIntoView({ inline: "center", block: "nearest" }); }
+      else p.removeAttribute("aria-current");
+    });
+    document.getElementById("progress").style.transform = "scaleX(" + ((i + 1) / ids.length) + ")";
+    var prev = document.getElementById("prev"), next = document.getElementById("next");
+    prev.disabled = i === 0; next.disabled = i === ids.length - 1;
+    document.getElementById("prevT").textContent = i > 0 ? titles[ids[i - 1]] : "";
+    document.getElementById("nextT").textContent = i < ids.length - 1 ? titles[ids[i + 1]] : "";
+    window.scrollTo(0, 0);
+  }
+  function go(i) {
+    if (i < 0 || i >= ids.length) return;
+    if (location.hash !== "#" + ids[i]) location.hash = ids[i]; else show(i, false);
+  }
+
+  window.addEventListener("hashchange", function () { show(idx(), true); });
+  document.getElementById("prev").addEventListener("click", function () { go(current - 1); });
+  document.getElementById("next").addEventListener("click", function () { go(current + 1); });
+  document.querySelector("[data-go=next]").addEventListener("click", function () { go(current + 1); });
+  document.addEventListener("keydown", function (e) {
+    if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    if (e.key === "ArrowLeft") go(current + 1);      // RTL: left = forward
+    else if (e.key === "ArrowRight") go(current - 1);
+  });
+
+  // swipe
+  var sx = null;
+  document.addEventListener("touchstart", function (e) { sx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener("touchend", function (e) {
+    if (sx === null) return;
+    var dx = e.changedTouches[0].clientX - sx; sx = null;
+    if (Math.abs(dx) < 80) return;
+    if (e.target.closest && e.target.closest(".tablewrap")) return;
+    go(dx < 0 ? current + 1 : current - 1);
+  }, { passive: true });
+
+  // quiz
+  Array.prototype.forEach.call(document.querySelectorAll(".reveal"), function (b) {
+    b.addEventListener("click", function () { b.parentNode.classList.add("open"); });
+  });
+
+  // theme toggle
+  document.getElementById("theme").addEventListener("click", function () {
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+
+  show(idx(), false);
+})();
+</script>
+
+</body></html>
